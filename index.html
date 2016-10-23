@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Emoji</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <style>
+    html, * {
+      box-sizing: border-box;
+    }
+    .emojis input {
+      font-family: monospace;
+      font-size: 2em;
+      line-height: 2em;
+      padding: 4px 8px;
+      display: block;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="emojis">
+    <input type="text" value="(´･_･`)">
+    <input type="text" value="(´・ω・`)">
+    <input type="text" value="◢▆▅▄▃崩╰(〒皿〒)╯潰▃▄▅▇◣">
+    <input type="text" value="(*´∀`)~♥">
+    <input type="text" value="ヽ(✿ﾟ▽ﾟ)ノ">
+    <input type="text" value="ヽ(́◕◞౪◟◕‵)ﾉ">
+    <input type="text" value="(#`Д´)ﾉ">
+    <input type="text" value="(╬ﾟдﾟ)">
+    <input type="text" value="(╯‵□′)╯︵┴─┴">
+    <input type="text" value="(╬ﾟдﾟ)▄︻┻┳═一">
+    <input type="text" value="(´・ω・)">
+    <input type="text" value="_(:3 」∠ )_">
+    <input type="text" value="(σ′▽‵)′▽‵)σ">
+    <input type="text" value="ヾ(*´∀ ˋ*)ﾉ">
+    <input type="text" value="(ง๑ •̀_•́)ง">
+    <input type="text" value="(;´༎ຶД༎ຶ)">
+    <input type="text" value="இдஇ">
+    <input type="text" value="_(´ཀ」 ∠)_">
+    <input type="text" value="。･ﾟ･(つд`ﾟ)･ﾟ･">
+    <input type="text" value="・゜・(PД`q｡)・゜・">
+    <input type="text" value="(╥﹏╥)">
+    <input type="text" value="ಠ_ಠ">
+  </div>
+  <script>
+    var selme = function() {
+      this.select()
+    };
+    Array.prototype.slice.call(document.querySelectorAll(".emojis input")).map(function(e) { e.onclick = e.onfocus = selme; })
+  </script>
+</body>
+</html>
