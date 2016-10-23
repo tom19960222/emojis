@@ -1,6 +1,4 @@
-<?php
-$emojis = mb_split('\n', file_get_contents('emoji.txt'));
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -10,7 +8,7 @@ $emojis = mb_split('\n', file_get_contents('emoji.txt'));
   <meta property="og:title" content="Emoji">
   <meta property="og:description" content="Emoji as a Service">
   <meta property="og:image" content="https://i.imgur.com/MuLr0Sa.png">
-  <meta property="og:url" content="https://inndy.tw/emoji/">
+  <meta property="og:url" content="https://knowlet.github.io/emojis/">
   <style>
     body {
       background-color: #333;
@@ -43,35 +41,43 @@ $emojis = mb_split('\n', file_get_contents('emoji.txt'));
   </div>
 
   <div class="emojis container">
-<?php foreach($emojis as $emoji): if(mb_strlen($emoji) == 0) continue; ?>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-      <button class="btn btn-success btn-block" data-clipboard-text="<?=htmlentities($emoji)?>"><?=htmlentities($emoji)?></button>
-    </div>
-<?php endforeach; ?>
   </div>
   <script src="clipboard.min.js"></script>
   <script>
-    var emojis = document.querySelectorAll('.emojis .btn')
-    var h1 = document.querySelector('h1')
-    h1.innerText = emojis[~~(Math.random() * emojis.length)].innerText
+    fetch('emojis.txt')
+    .then(res => res.text())
+    .then(emojis => {
+      const board = document.querySelector('.emojis.container');
+      for (let emoji of emojis.split('\n')) {
+        if (!emoji.length) continue;
+        board.innerHTML += `
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <button class="btn btn-success btn-block" data-clipboard-text="${emoji}">${emoji}</button>
+          </div>
+        `;
+        var emojis = document.querySelectorAll('.emojis .btn')
+        var h1 = document.querySelector('h1')
+        h1.innerText = emojis[~~(Math.random() * emojis.length)].innerText
 
-    var clipboard = new Clipboard('.btn')
+        var clipboard = new Clipboard('.btn')
 
-    clipboard.on('success', function(e) {
-      h1.innerText = e.text
+        clipboard.on('success', function(e) {
+          h1.innerText = e.text
 
-      console.info('Action:', e.action)
-      console.info('Text:', e.text)
-      console.info('Trigger:', e.trigger)
+          console.info('Action:', e.action)
+          console.info('Text:', e.text)
+          console.info('Trigger:', e.trigger)
 
-      e.clearSelection()
-    });
+          e.clearSelection()
+        });
 
-    clipboard.on('error', function(e) {
-      console.error('Action:', e.action)
-      console.error('Trigger:', e.trigger)
+        clipboard.on('error', function(e) {
+          console.error('Action:', e.action)
+          console.error('Trigger:', e.trigger)
 
-      alert('Can not copy text')
+          alert('Can not copy text')
+        });
+      }
     });
   </script>
 </body>
