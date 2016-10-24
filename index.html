@@ -44,40 +44,71 @@
   </div>
   <script src="clipboard.min.js"></script>
   <script>
+    Object.prototype.foreach = function(callback) {
+      for (var index in this) {
+        if (this.hasOwnProperty(index)) {
+          callback(this[index], index)
+        }
+      }
+    }
+
+    function set_text(elem, text) {
+      if (typeof(elem.textContent) === 'string') {
+        elem.textContent = text
+      } else if(typeof(elem.innerText) === 'string') {
+        elem.innerText = text
+      } else {
+        throw new Error('Can not set text to this object')
+      }
+    }
+
+    function create_dom(tag, attr, child) {
+      var elem = document.createElement(tag)
+      attr.foreach((v, k) => elem.setAttribute(k, v))
+      if (typeof(child) === 'string') {
+        set_text(elem, child)
+      } else if (child instanceof Array) {
+        child.forEach(e => elem.appendChild(e))
+      }
+      return elem
+    }
+
     fetch('emojis.txt')
     .then(res => res.text())
     .then(emojis => {
       const board = document.querySelector('.emojis.container');
       for (let emoji of emojis.split('\n')) {
         if (!emoji.length) continue;
-        board.innerHTML += `
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <button class="btn btn-success btn-block" data-clipboard-text="${emoji}">${emoji}</button>
-          </div>
-        `;
-        var emojis = document.querySelectorAll('.emojis .btn')
-        var h1 = document.querySelector('h1')
-        h1.innerText = emojis[~~(Math.random() * emojis.length)].innerText
-
-        var clipboard = new Clipboard('.btn')
-
-        clipboard.on('success', function(e) {
-          h1.innerText = e.text
-
-          console.info('Action:', e.action)
-          console.info('Text:', e.text)
-          console.info('Trigger:', e.trigger)
-
-          e.clearSelection()
-        });
-
-        clipboard.on('error', function(e) {
-          console.error('Action:', e.action)
-          console.error('Trigger:', e.trigger)
-
-          alert('Can not copy text')
-        });
+        var emoji_tag = create_dom('div', {'class': 'col-xs-12 col-sm-6 col-md-4 col-lg-3'}, [
+          create_dom('button', {
+            'class': 'btn btn-success btn-block',
+            'data-clipboard-text': emoji
+          }, emoji)
+        ])
+        board.appendChild(emoji_tag)
       }
+      var emojis = document.querySelectorAll('.emojis .btn')
+      var h1 = document.querySelector('h1')
+      h1.innerText = emojis[~~(Math.random() * emojis.length)].innerText
+
+      var clipboard = new Clipboard('.btn')
+
+      clipboard.on('success', function(e) {
+        h1.innerText = e.text
+
+        console.info('Action:', e.action)
+        console.info('Text:', e.text)
+        console.info('Trigger:', e.trigger)
+
+        e.clearSelection()
+      });
+
+      clipboard.on('error', function(e) {
+        console.error('Action:', e.action)
+        console.error('Trigger:', e.trigger)
+
+        alert('Can not copy text')
+      });
     });
   </script>
 </body>
